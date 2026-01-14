@@ -70,34 +70,52 @@ public class BookingsController : ControllerBase
         return NoContent();
     }
 
-    [HttpGet("available/{date}")]
+    [HttpGet("booked/{date}")]
     [AllowAnonymous]
-    public async Task<ActionResult<AvailableSlotsResponse>> GetAvailableSlots(string date)
+    public async Task<ActionResult<BookedSlotsByDateResponse>> GetBookedSlots(string date, [FromQuery] int daysAhead = 1)
     {
         if (!DateTime.TryParse(date, out var parsedDate))
         {
             return BadRequest(new { message = "Invalid date format. Use yyyy-MM-dd" });
         }
 
-        var bookedSlots = await _bookingService.GetAvailableTimeSlots(parsedDate);
-        var bookedSlotNumbers = bookedSlots.Select(s => s.TimeSlotNumber).ToList();
+        if (daysAhead < 1)
+        {
+            return BadRequest(new { message = "daysAhead must be at least 1" });
+        }
 
-        var availableSlots = new List<int> { 1, 2, 3 }
-            .Where(slotNum => !bookedSlotNumbers.Contains(slotNum))
+        var bookedSlots = await _bookingService.GetBookedTimeSlots(parsedDate, daysAhead);
+
+        // Group bookings by date
+        var bookingsByDate = bookedSlots.GroupBy(b => b.BookingDate.Date)
+            .Select(g => new DayBookings
+            {
+                Date = g.Key,
+                BookedSlots = g.ToList()
+            })
+            .OrderBy(d => d.Date)
             .ToList();
 
-        return Ok(new AvailableSlotsResponse
+        return Ok(new BookedSlotsByDateResponse
         {
-            Date = parsedDate.Date,
-            AvailableSlots = availableSlots,
-            BookedSlots = bookedSlots
+            StartDate = parsedDate.Date,
+            EndDate = parsedDate.Date.AddDays(daysAhead).AddDays(-1),
+            DaysAhead = daysAhead,
+            BookingsByDate = bookingsByDate
         });
     }
 }
 
-public class AvailableSlotsResponse
+public class DayBookings
 {
     public DateTime Date { get; set; }
-    public List<int> AvailableSlots { get; set; } = new();
     public List<BookedTimeSlotDto> BookedSlots { get; set; } = new();
+}
+
+public class BookedSlotsByDateResponse
+{
+    public DateTime StartDate { get; set; }
+    public DateTime EndDate { get; set; }
+    public int DaysAhead { get; set; }
+    public List<DayBookings> BookingsByDate { get; set; } = new();
 }

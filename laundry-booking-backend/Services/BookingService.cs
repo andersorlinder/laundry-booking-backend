@@ -10,7 +10,7 @@ public interface IBookingService
     Task<BookedTimeSlotDto?> BookTimeSlotAsync(int userId, BookingRequest request);
     Task<bool> UnbookTimeSlotAsync(int userId, int slotId);
     Task<List<BookedTimeSlotDto>> GetUserBookingsAsync(int userId);
-    Task<List<BookedTimeSlotDto>> GetAvailableTimeSlots(DateTime date);
+    Task<List<BookedTimeSlotDto>> GetBookedTimeSlots(DateTime date, int daysAhead = 1);
 }
 
 public class BookingService : IBookingService
@@ -73,6 +73,7 @@ public class BookingService : IBookingService
         return new BookedTimeSlotDto
         {
             Id = booking.Id,
+            UserId = booking.UserId,
             BookingDate = booking.BookingDate,
             TimeSlotNumber = booking.TimeSlotNumber,
             CreatedAt = booking.CreatedAt
@@ -104,6 +105,7 @@ public class BookingService : IBookingService
             .Select(b => new BookedTimeSlotDto
             {
                 Id = b.Id,
+                UserId = b.UserId,
                 BookingDate = b.BookingDate,
                 TimeSlotNumber = b.TimeSlotNumber,
                 CreatedAt = b.CreatedAt
@@ -111,14 +113,19 @@ public class BookingService : IBookingService
             .ToListAsync();
     }
 
-    public async Task<List<BookedTimeSlotDto>> GetAvailableTimeSlots(DateTime date)
+    public async Task<List<BookedTimeSlotDto>> GetBookedTimeSlots(DateTime date, int daysAhead = 1)
     {
+        var startDate = date.Date;
+        var endDate = startDate.AddDays(daysAhead);
+
         var bookedSlots = await _context.BookedTimeSlots
-            .Where(b => b.BookingDate.Date == date.Date)
-            .OrderBy(b => b.TimeSlotNumber)
+            .Where(b => b.BookingDate.Date >= startDate && b.BookingDate.Date < endDate)
+            .OrderBy(b => b.BookingDate)
+            .ThenBy(b => b.TimeSlotNumber)
             .Select(b => new BookedTimeSlotDto
             {
                 Id = b.Id,
+                UserId = b.UserId,
                 BookingDate = b.BookingDate,
                 TimeSlotNumber = b.TimeSlotNumber,
                 CreatedAt = b.CreatedAt
