@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -51,12 +51,6 @@ namespace laundry_booking_backend.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Users_Email",
-                table: "Users",
-                column: "Email",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
                 name: "IX_BookedTimeSlots_BookingDate_TimeSlotNumber",
                 table: "BookedTimeSlots",
                 columns: new[] { "BookingDate", "TimeSlotNumber" },
@@ -66,6 +60,12 @@ namespace laundry_booking_backend.Migrations
                 name: "IX_BookedTimeSlots_UserId",
                 table: "BookedTimeSlots",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_Email",
+                table: "Users",
+                column: "Email",
+                unique: true);
         }
 
         /// <inheritdoc />
