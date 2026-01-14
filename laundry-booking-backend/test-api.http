@@ -1,0 +1,44 @@
+### Laundry Booking API Tests
+
+### Variables
+@baseUrl = https://localhost:5001
+@token =
+
+### Register a new user
+POST {{baseUrl}}/api/auth/register
+Content-Type: application/json
+
+{
+  "email": "john@example.com",
+  "pin": "1234"
+}
+
+### Login user
+POST {{baseUrl}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "john@example.com",
+  "pin": "1234"
+}
+
+### Book a time slot (requires token from login response)
+POST {{baseUrl}}/api/bookings/book
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+
+{
+  "bookingDate": "2026-01-20",
+  "timeSlotNumber": 1
+}
+
+### Get available slots for a date
+GET {{baseUrl}}/api/bookings/available/2026-01-20
+
+### Get user's bookings (requires token)
+GET {{baseUrl}}/api/bookings/my-bookings
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+
+### Unbook a time slot (requires token)
+DELETE {{baseUrl}}/api/bookings/unbook/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
