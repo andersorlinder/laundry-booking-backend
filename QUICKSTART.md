@@ -66,9 +66,9 @@ curl -X POST https://localhost:5001/api/bookings/book \
   --insecure
 ```
 
-### Check available slots:
+### Check booked slots:
 ```bash
-curl -X GET "https://localhost:5001/api/bookings/available/2026-01-20" \
+curl -X GET "https://localhost:5001/api/bookings/booked?date=2026-01-20&daysAhead=7" \
   --insecure
 ```
 

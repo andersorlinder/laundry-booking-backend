@@ -57,8 +57,8 @@ curl -X POST https://localhost:5001/api/bookings/book \
   -d '{"bookingDate":"2026-01-20","timeSlotNumber":1}' \
   --insecure
 
-# Check available slots
-curl -X GET "https://localhost:5001/api/bookings/available/2026-01-20" \
+# Check booked slots
+curl -X GET "https://localhost:5001/api/bookings/booked?date=2026-01-20&daysAhead=7" \
   --insecure
 ```
 
@@ -75,7 +75,7 @@ POST   /api/auth/login         - Login and get JWT token
 POST   /api/bookings/book      - Book a time slot
 GET    /api/bookings/my-bookings  - Get your bookings
 DELETE /api/bookings/unbook/{id}  - Cancel a booking
-GET    /api/bookings/available/{date} - Check available slots (public)
+GET    /api/bookings/booked - View booked slots for date range (public)
 ```
 
 ## 🔐 Security

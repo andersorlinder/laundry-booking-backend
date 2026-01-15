@@ -29,7 +29,7 @@ laundry-booking-backend/laundry-booking-backend/
 │                                       # POST /api/bookings/book
 │                                       # GET /api/bookings/my-bookings
 │                                       # DELETE /api/bookings/unbook/{id}
-│                                       # GET /api/bookings/available/{date}
+│                                       # GET /api/bookings/booked?date=...&daysAhead=...
 │
 ├── 📁 Models/
 │   ├── User.cs                        # User entity
@@ -47,7 +47,7 @@ laundry-booking-backend/laundry-booking-backend/
 │       ├── BookTimeSlotAsync()        # Book a slot
 │       ├── UnbookTimeSlotAsync()      # Cancel a booking
 │       ├── GetUserBookingsAsync()     # Get user's bookings
-│       └── GetAvailableTimeSlots()    # Check available slots
+│       └── GetBookedTimeSlots()       # View booked slots for date range
 │
 ├── 📁 Data/
 │   └── LaundryDbContext.cs            # Entity Framework Core context
@@ -58,7 +58,7 @@ laundry-booking-backend/laundry-booking-backend/
 │   ├── LoginResponse.cs               # {userId, email, token}
 │   ├── RegisterRequest.cs             # {email, pin}
 │   ├── BookingRequest.cs              # {bookingDate, timeSlotNumber}
-│   └── BookedTimeSlotDto.cs           # {id, bookingDate, timeSlotNumber, createdAt}
+│   └── BookedTimeSlotDto.cs           # {id, userId, bookingDate, timeSlotNumber, createdAt}
 │
 ├── 📁 Migrations/
 │   ├── 20260114000000_InitialCreate.cs        # Initial schema migration
@@ -91,7 +91,7 @@ laundry-booking-backend/laundry-booking-backend/
     ├── POST /api/bookings/book
     ├── GET /api/bookings/my-bookings
     ├── DELETE /api/bookings/unbook/{id}
-    └── GET /api/bookings/available/{date}
+    └── GET /api/bookings/booked?date=...&daysAhead=...
 
 ```
 

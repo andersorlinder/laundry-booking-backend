@@ -70,9 +70,9 @@ public class BookingsController : ControllerBase
         return NoContent();
     }
 
-    [HttpGet("booked/{date}")]
+    [HttpGet("booked")]
     [AllowAnonymous]
-    public async Task<ActionResult<BookedSlotsByDateResponse>> GetBookedSlots(string date, [FromQuery] int daysAhead = 1)
+    public async Task<ActionResult<BookedSlotsByDateResponse>> GetBookedSlots([FromQuery] string date, [FromQuery] int daysAhead = 1)
     {
         if (!DateTime.TryParse(date, out var parsedDate))
         {

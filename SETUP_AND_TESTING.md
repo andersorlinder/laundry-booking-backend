@@ -186,23 +186,30 @@ curl -X POST https://localhost:5001/api/bookings/book \
   --insecure
 ```
 
-#### 4. Check Available Slots
+#### 4. Check Booked Slots
 ```bash
-curl -X GET "https://localhost:5001/api/bookings/available/2026-01-20" \
+curl -X GET "https://localhost:5001/api/bookings/booked?date=2026-01-20&daysAhead=7" \
   --insecure
 ```
 
 **Response**:
 ```json
 {
-  "date": "2026-01-20T00:00:00",
-  "availableSlots": [2, 3],
-  "bookedSlots": [
+  "startDate": "2026-01-20T00:00:00",
+  "endDate": "2026-01-26T00:00:00",
+  "daysAhead": 7,
+  "bookingsByDate": [
     {
-      "id": 1,
-      "bookingDate": "2026-01-20T00:00:00",
-      "timeSlotNumber": 1,
-      "createdAt": "2026-01-14T10:30:00Z"
+      "date": "2026-01-20T00:00:00",
+      "bookedSlots": [
+        {
+          "id": 1,
+          "userId": 1,
+          "bookingDate": "2026-01-20T00:00:00",
+          "timeSlotNumber": 1,
+          "createdAt": "2026-01-14T10:30:00Z"
+        }
+      ]
     }
   ]
 }
@@ -230,20 +237,20 @@ curl -X DELETE https://localhost:5001/api/bookings/unbook/1 \
    - **Login**: POST to `https://localhost:5001/api/auth/login`
    - **Book**: POST to `https://localhost:5001/api/bookings/book` (add Bearer token)
    - **Get Bookings**: GET to `https://localhost:5001/api/bookings/my-bookings` (add Bearer token)
-   - **Available**: GET to `https://localhost:5001/api/bookings/available/{date}`
+   - **Booked**: GET to `https://localhost:5001/api/bookings/booked?date={date}&daysAhead={days}`
    - **Unbook**: DELETE to `https://localhost:5001/api/bookings/unbook/{slotId}` (add Bearer token)
 
 ## Complete Test Workflow
 
 1. **Register** - Get a token
-2. **Check Available Slots** - See what's available for a date
+2. **Check Booked Slots** - See what's booked for a date range
 3. **Book Slot 1** - Book the first time slot
-4. **Check Available Slots** - Verify slot 1 is now booked
+4. **Check Booked Slots** - Verify slot 1 is now booked
 5. **Book Slot 2** - Book the second time slot
 6. **Get My Bookings** - List all your bookings
 7. **Unbook Slot 1** - Cancel the first booking
 8. **Get My Bookings** - Verify the cancellation
-9. **Check Available Slots** - Verify slot 1 is available again
+9. **Check Booked Slots** - Verify slot 1 is no longer booked
 
 ## Common Errors and Troubleshooting
 

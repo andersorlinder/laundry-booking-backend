@@ -8,7 +8,7 @@ A REST API for managing laundry time slot bookings with user authentication. Use
 - **JWT Token-based Authorization**: Secure API endpoints with JWT tokens
 - **Time Slot Management**: 3 time slots per day (slot 1, 2, 3)
 - **Booking System**: Users can book and unbook laundry slots
-- **Availability Checking**: View available slots for any date
+- **Booking Visibility**: View booked slots for any date range
 - **PostgreSQL Database**: Persistent data storage
 - **Input Validation**: Email and PIN format validation
 
@@ -140,22 +140,30 @@ The API will be available at `https://localhost:5001`
 - **Authentication**: Required (Bearer token)
 - **Response**: 204 No Content
 
-#### Get Available Slots for a Date
-- **Endpoint**: `GET /api/bookings/available/{date}`
+#### Get Booked Slots for a Date Range
+- **Endpoint**: `GET /api/bookings/booked?date=2026-01-20&daysAhead=7`
 - **Authentication**: Not required
-- **Parameters**:
-  - `date`: Date in format `yyyy-MM-dd` (e.g., `2026-01-20`)
+- **Query Parameters**:
+  - `date`: Start date in format `yyyy-MM-dd` (e.g., `2026-01-20`) - required
+  - `daysAhead`: Number of days to query (optional, default: 1)
 - **Response** (200):
   ```json
   {
-    "date": "2026-01-20T00:00:00",
-    "availableSlots": [2, 3],
-    "bookedSlots": [
+    "startDate": "2026-01-20T00:00:00",
+    "endDate": "2026-01-26T00:00:00",
+    "daysAhead": 7,
+    "bookingsByDate": [
       {
-        "id": 5,
-        "bookingDate": "2026-01-20T00:00:00",
-        "timeSlotNumber": 1,
-        "createdAt": "2026-01-14T10:30:00Z"
+        "date": "2026-01-20T00:00:00",
+        "bookedSlots": [
+          {
+            "id": 5,
+            "userId": 1,
+            "bookingDate": "2026-01-20T00:00:00",
+            "timeSlotNumber": 1,
+            "createdAt": "2026-01-14T10:30:00Z"
+          }
+        ]
       }
     ]
   }

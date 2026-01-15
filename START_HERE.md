@@ -86,7 +86,7 @@ POST /api/auth/login             Login and get JWT token
 POST /api/bookings/book          Book a time slot
 GET /api/bookings/my-bookings    Get your bookings
 DELETE /api/bookings/unbook/{id} Cancel a booking
-GET /api/bookings/available/{date} Check available slots (public)
+GET /api/bookings/booked         View booked slots for date range (public)
 ```
 
 ---

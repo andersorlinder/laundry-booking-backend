@@ -16,10 +16,10 @@ A complete REST API for managing laundry time slot bookings built with C# and AS
 - Unique constraint ensures each slot can only be booked once per day
 
 ✅ **Booking Operations**
-- Book available time slots
+- Book time slots
 - Unbook (cancel) existing bookings
 - View personal bookings
-- Check available slots for any date
+- View booked slots across multiple days
 
 ✅ **Database**
 - PostgreSQL backend
@@ -67,7 +67,7 @@ laundry-booking-backend/
 - `POST /api/bookings/book` - Book a time slot
 - `GET /api/bookings/my-bookings` - Get user's bookings
 - `DELETE /api/bookings/unbook/{slotId}` - Cancel a booking
-- `GET /api/bookings/available/{date}` - Check available slots for a date (public)
+- `GET /api/bookings/booked?date={date}&daysAhead={days}` - View booked slots for a date range (public)
 
 ## Technology Stack
 
