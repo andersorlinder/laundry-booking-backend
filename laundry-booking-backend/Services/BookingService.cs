@@ -38,10 +38,12 @@ public class BookingService : IBookingService
             return null; // Cannot book for past dates
         }
 
+        var requestDateUtc = DateTime.SpecifyKind(request.BookingDate.Date, DateTimeKind.Utc);
+
         // Check if user already booked this slot
         var existingBooking = await _context.BookedTimeSlots
             .FirstOrDefaultAsync(b => b.UserId == userId &&
-                                      b.BookingDate.Date == request.BookingDate.Date &&
+                                      b.BookingDate.Date == requestDateUtc &&
                                       b.TimeSlotNumber == request.TimeSlotNumber);
 
         if (existingBooking != null)
@@ -51,7 +53,7 @@ public class BookingService : IBookingService
 
         // Check if slot is already taken by another user
         var slotTaken = await _context.BookedTimeSlots
-            .FirstOrDefaultAsync(b => b.BookingDate.Date == request.BookingDate.Date &&
+            .FirstOrDefaultAsync(b => b.BookingDate.Date == requestDateUtc &&
                                       b.TimeSlotNumber == request.TimeSlotNumber);
 
         if (slotTaken != null)
@@ -62,7 +64,7 @@ public class BookingService : IBookingService
         var booking = new BookedTimeSlot
         {
             UserId = userId,
-            BookingDate = request.BookingDate.Date,
+            BookingDate = requestDateUtc,
             TimeSlotNumber = request.TimeSlotNumber,
             CreatedAt = DateTime.UtcNow
         };
@@ -115,7 +117,7 @@ public class BookingService : IBookingService
 
     public async Task<List<BookedTimeSlotDto>> GetBookedTimeSlots(DateTime date, int daysAhead = 1)
     {
-        var startDate = date.Date;
+        var startDate = DateTime.SpecifyKind(date.Date, DateTimeKind.Utc);
         var endDate = startDate.AddDays(daysAhead);
 
         var bookedSlots = await _context.BookedTimeSlots
