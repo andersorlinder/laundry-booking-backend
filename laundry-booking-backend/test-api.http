@@ -10,7 +10,8 @@ Content-Type: application/json
 
 {
   "email": "john@example.com",
-  "pin": "1234"
+  "pin": "1234",
+  "apartmentNumber": "A10231"
 }
 
 ### Login user

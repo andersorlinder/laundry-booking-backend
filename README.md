@@ -1,16 +1,17 @@
 # Laundry Booking API
 
-A REST API for managing laundry time slot bookings with user authentication. Users can register with email and a 4-digit PIN, then book and unbook laundry time slots. The system supports 3 time slots per day.
+A REST API for managing laundry time slot bookings with user authentication. Users can register with email, apartment number, and a 4-digit PIN, then book and unbook laundry time slots. The system supports 3 time slots per day.
 
 ## Features
 
-- **User Authentication**: Register and login with email and 4-digit PIN
+- **User Authentication**: Register and login with email, apartment number, and 4-digit PIN
 - **JWT Token-based Authorization**: Secure API endpoints with JWT tokens
+- **Apartment Tracking**: Each user and booking is associated with a 6-character apartment number
 - **Time Slot Management**: 3 time slots per day (slot 1, 2, 3)
 - **Booking System**: Users can book and unbook laundry slots
-- **Booking Visibility**: View booked slots for any date range
+- **Booking Visibility**: View booked slots with apartment numbers for any date range
 - **PostgreSQL Database**: Persistent data storage
-- **Input Validation**: Email and PIN format validation
+- **Input Validation**: Email, PIN, and apartment number format validation
 
 ## Prerequisites
 
@@ -67,7 +68,8 @@ The API will be available at `https://localhost:5001`
   ```json
   {
     "email": "user@example.com",
-    "pin": "1234"
+    "pin": "1234",
+    "apartmentNumber": "A10231"
   }
   ```
 - **Response** (201):
@@ -75,9 +77,14 @@ The API will be available at `https://localhost:5001`
   {
     "userId": 1,
     "email": "user@example.com",
+    "apartmentNumber": "A10231",
     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
   }
   ```
+- **Validation**:
+  - Email must be valid format
+  - PIN must be exactly 4 digits
+  - Apartment number must be exactly 6 characters
 
 #### Login User
 - **Endpoint**: `POST /api/auth/login`
@@ -94,6 +101,7 @@ The API will be available at `https://localhost:5001`
   {
     "userId": 1,
     "email": "user@example.com",
+    "apartmentNumber": "A10231",
     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
   }
   ```
@@ -114,6 +122,8 @@ The API will be available at `https://localhost:5001`
   ```json
   {
     "id": 5,
+    "userId": 1,
+    "apartmentNumber": "A10231",
     "bookingDate": "2026-01-20T00:00:00",
     "timeSlotNumber": 1,
     "createdAt": "2026-01-14T10:30:00Z"
@@ -128,6 +138,8 @@ The API will be available at `https://localhost:5001`
   [
     {
       "id": 5,
+      "userId": 1,
+      "apartmentNumber": "A10231",
       "bookingDate": "2026-01-20T00:00:00",
       "timeSlotNumber": 1,
       "createdAt": "2026-01-14T10:30:00Z"
@@ -159,6 +171,7 @@ The API will be available at `https://localhost:5001`
           {
             "id": 5,
             "userId": 1,
+            "apartmentNumber": "A10231",
             "bookingDate": "2026-01-20T00:00:00",
             "timeSlotNumber": 1,
             "createdAt": "2026-01-14T10:30:00Z"
@@ -179,7 +192,8 @@ curl -X POST https://localhost:5001/api/auth/register \
   -H "Content-Type: application/json" \
   -d '{
     "email": "john@example.com",
-    "pin": "1234"
+    "pin": "1234",
+    "apartmentNumber": "A10231"
   }'
 ```
 
@@ -233,6 +247,7 @@ Error responses include a message explaining the issue:
 - `Id` (INT, Primary Key)
 - `Email` (TEXT, Unique)
 - `PasswordPin` (TEXT, Hashed)
+- `ApartmentNumber` (TEXT, Exactly 6 characters)
 - `CreatedAt` (TIMESTAMP)
 - `UpdatedAt` (TIMESTAMP)
 

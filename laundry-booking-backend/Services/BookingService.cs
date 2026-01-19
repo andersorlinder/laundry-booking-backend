@@ -72,10 +72,13 @@ public class BookingService : IBookingService
         _context.BookedTimeSlots.Add(booking);
         await _context.SaveChangesAsync();
 
+        var user = await _context.Users.FindAsync(userId);
+
         return new BookedTimeSlotDto
         {
             Id = booking.Id,
             UserId = booking.UserId,
+            ApartmentNumber = user!.ApartmentNumber,
             BookingDate = booking.BookingDate,
             TimeSlotNumber = booking.TimeSlotNumber,
             CreatedAt = booking.CreatedAt
@@ -101,6 +104,7 @@ public class BookingService : IBookingService
     public async Task<List<BookedTimeSlotDto>> GetUserBookingsAsync(int userId)
     {
         return await _context.BookedTimeSlots
+            .Include(b => b.User)
             .Where(b => b.UserId == userId)
             .OrderBy(b => b.BookingDate)
             .ThenBy(b => b.TimeSlotNumber)
@@ -108,6 +112,7 @@ public class BookingService : IBookingService
             {
                 Id = b.Id,
                 UserId = b.UserId,
+                ApartmentNumber = b.User.ApartmentNumber,
                 BookingDate = b.BookingDate,
                 TimeSlotNumber = b.TimeSlotNumber,
                 CreatedAt = b.CreatedAt
@@ -121,6 +126,7 @@ public class BookingService : IBookingService
         var endDate = startDate.AddDays(daysAhead);
 
         var bookedSlots = await _context.BookedTimeSlots
+            .Include(b => b.User)
             .Where(b => b.BookingDate.Date >= startDate && b.BookingDate.Date < endDate)
             .OrderBy(b => b.BookingDate)
             .ThenBy(b => b.TimeSlotNumber)
@@ -128,6 +134,7 @@ public class BookingService : IBookingService
             {
                 Id = b.Id,
                 UserId = b.UserId,
+                ApartmentNumber = b.User.ApartmentNumber,
                 BookingDate = b.BookingDate,
                 TimeSlotNumber = b.TimeSlotNumber,
                 CreatedAt = b.CreatedAt

@@ -15,6 +15,7 @@ public interface IAuthService
     Task<LoginResponse?> RegisterAsync(RegisterRequest request);
     string GenerateToken(User user);
     bool ValidatePin(string pin);
+    bool ValidateApartmentNumber(string apartmentNumber);
 }
 
 public class AuthService : IAuthService
@@ -36,6 +37,12 @@ public class AuthService : IAuthService
             return null; // Invalid PIN format
         }
 
+        // Validate apartment number format
+        if (!ValidateApartmentNumber(request.ApartmentNumber))
+        {
+            return null; // Invalid apartment number format
+        }
+
         // Check if email already exists
         var existingUser = await _context.Users
             .FirstOrDefaultAsync(u => u.Email == request.Email);
@@ -49,6 +56,7 @@ public class AuthService : IAuthService
         {
             Email = request.Email,
             PasswordPin = HashPin(request.Pin),
+            ApartmentNumber = request.ApartmentNumber,
             CreatedAt = DateTime.UtcNow,
             UpdatedAt = DateTime.UtcNow
         };
@@ -60,6 +68,7 @@ public class AuthService : IAuthService
         {
             UserId = user.Id,
             Email = user.Email,
+            ApartmentNumber = user.ApartmentNumber,
             Token = GenerateToken(user)
         };
     }
@@ -83,6 +92,7 @@ public class AuthService : IAuthService
         {
             UserId = user.Id,
             Email = user.Email,
+            ApartmentNumber = user.ApartmentNumber,
             Token = GenerateToken(user)
         };
     }
@@ -122,6 +132,12 @@ public class AuthService : IAuthService
     {
         // PIN must be exactly 4 digits
         return !string.IsNullOrWhiteSpace(pin) && pin.Length == 4 && pin.All(char.IsDigit);
+    }
+
+    public bool ValidateApartmentNumber(string apartmentNumber)
+    {
+        // Apartment number must be exactly 6 characters
+        return !string.IsNullOrWhiteSpace(apartmentNumber) && apartmentNumber.Length == 6;
     }
 
     private string HashPin(string pin)

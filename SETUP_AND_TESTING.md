@@ -147,6 +147,15 @@ curl -X POST https://localhost:5001/api/auth/register \
     "email": "user@example.com",
     "pin": "1234"
   }' \
+#### 1. Register New User
+```bash
+curl -X POST https://localhost:5001/api/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "user@example.com",
+    "pin": "1234",
+    "apartmentNumber": "A10231"
+  }' \
   --insecure
 ```
 
@@ -155,6 +164,7 @@ curl -X POST https://localhost:5001/api/auth/register \
 {
   "userId": 1,
   "email": "user@example.com",
+  "apartmentNumber": "A10231",
   "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
 }
 ```
@@ -168,6 +178,16 @@ curl -X POST https://localhost:5001/api/auth/login \
     "pin": "1234"
   }' \
   --insecure
+```
+
+**Expected Response** (200):
+```json
+{
+  "userId": 1,
+  "email": "user@example.com",
+  "apartmentNumber": "A10231",
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+}
 ```
 
 Save the returned `token` for the next requests.
@@ -205,6 +225,7 @@ curl -X GET "https://localhost:5001/api/bookings/booked?date=2026-01-20&daysAhea
         {
           "id": 1,
           "userId": 1,
+          "apartmentNumber": "A10231",
           "bookingDate": "2026-01-20T00:00:00",
           "timeSlotNumber": 1,
           "createdAt": "2026-01-14T10:30:00Z"

@@ -55,9 +55,10 @@
 │  │ │ Id (PK)         │         │ Id (PK)                  │ ││
 │  │ │ Email (UNIQUE)  │◄────────│ UserId (FK) → Users(Id)  │ ││
 │  │ │ PasswordPin     │         │ BookingDate              │ ││
-│  │ │ CreatedAt       │         │ TimeSlotNumber (1-3)     │ ││
-│  │ │ UpdatedAt       │         │ CreatedAt                │ ││
-│  │ │                 │         │ UNIQUE(Date, SlotNumber) │ ││
+│  │ │ ApartmentNumber │         │ TimeSlotNumber (1-3)     │ ││
+│  │ │ CreatedAt       │         │ CreatedAt                │ ││
+│  │ │ UpdatedAt       │         │ UNIQUE(Date, SlotNumber) │ ││
+│  │ │                 │         │                          │ ││
 │  │ └─────────────────┘         └──────────────────────────┘ ││
 │  └────────────────────────────────────────────────────────────┘│
 └────────────────────────────────────────────────────────────────┘
@@ -71,13 +72,16 @@
 └─────┬──────┘                                                └──────┬───────┘
       │                                                              │
       │ 1. POST /api/auth/register                                  │
-      │    {email: "user@example.com", pin: "1234"}               │
+      │    {email: "user@example.com", pin: "1234",             │
+      │     apartmentNumber: "A10231"}                           │
       ├─────────────────────────────────────────────────────────►  │
       │                                                              │ Hash PIN
+      │                                                              │ Validate Apt#
       │                                                              │ Create User
       │                                                              │ Generate JWT
       │ 2. Response: LoginResponse                                  │
-      │    {userId: 1, email: "...", token: "eyJ..."}            │
+      │    {userId: 1, email: "...",                              │
+      │     apartmentNumber: "A10231", token: "eyJ..."}          │
       │  ◄─────────────────────────────────────────────────────────┤
       │                                                              │
       │ Store Token                                                 │

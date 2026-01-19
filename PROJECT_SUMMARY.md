@@ -6,9 +6,10 @@ A complete REST API for managing laundry time slot bookings built with C# and AS
 ## Key Features Implemented
 
 ✅ **User Authentication**
-- User registration with email and 4-digit PIN
+- User registration with email, apartment number (6 chars), and 4-digit PIN
 - Secure PIN hashing using SHA256
 - JWT token-based authentication (24-hour expiration)
+- Apartment number validation and tracking
 
 ✅ **Time Slot Management**
 - 3 time slots per day (slots 1, 2, 3)
@@ -91,13 +92,14 @@ laundry-booking-backend/
 ## Database Schema
 
 ### Users Table
-| Column      | Type      | Constraints        |
-| ----------- | --------- | ------------------ |
-| Id          | INT       | PK, Auto-increment |
-| Email       | TEXT      | UNIQUE             |
-| PasswordPin | TEXT      | SHA256 hashed      |
-| CreatedAt   | TIMESTAMP | UTC                |
-| UpdatedAt   | TIMESTAMP | UTC                |
+| Column          | Type      | Constraints        |
+| --------------- | --------- | ------------------ |
+| Id              | INT       | PK, Auto-increment |
+| Email           | TEXT      | UNIQUE             |
+| PasswordPin     | TEXT      | SHA256 hashed      |
+| ApartmentNumber | TEXT      | Exactly 6 chars    |
+| CreatedAt       | TIMESTAMP | UTC                |
+| UpdatedAt       | TIMESTAMP | UTC                |
 
 ### BookedTimeSlots Table
 | Column         | Type      | Constraints                         |

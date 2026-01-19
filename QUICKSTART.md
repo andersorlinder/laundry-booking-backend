@@ -51,11 +51,11 @@ API is now available at: **https://localhost:5001**
 ```bash
 curl -X POST https://localhost:5001/api/auth/register \
   -H "Content-Type: application/json" \
-  -d '{"email":"user@example.com","pin":"1234"}' \
+  -d '{"email":"user@example.com","pin":"1234","apartmentNumber":"A10231"}' \
   --insecure
 ```
 
-Save the `token` from the response.
+Response includes `userId`, `email`, `apartmentNumber`, and `token`. Save the `token` for authenticated requests.
 
 ### Book a slot:
 ```bash

@@ -7,8 +7,9 @@ A **production-ready REST API for a laundry booking system** with the following 
 ### Core Features Implemented
 
 ✅ **User Authentication System**
-- User registration with email and 4-digit PIN
+- User registration with email, apartment number (6 chars), and 4-digit PIN
 - Secure PIN hashing (SHA256)
+- Apartment number validation
 - JWT token generation and validation
 - 24-hour token expiration
 - Login endpoint
@@ -17,8 +18,8 @@ A **production-ready REST API for a laundry booking system** with the following 
 - 3 time slots per day (1, 2, 3)
 - Book available time slots
 - Unbook (cancel) bookings
-- View personal bookings
-- Check available slots for any date
+- View personal bookings with apartment numbers
+- Check booked slots with apartment numbers for any date range
 - Prevent double-booking with database constraints
 
 ✅ **Database**
