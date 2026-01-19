@@ -22,6 +22,7 @@ bld/
 [Oo]bj/
 [Ll]og/
 [Ll]ogs/
+publish/
 
 # .NET Core
 project.lock.json
@@ -51,4 +52,38 @@ CodeCoverage/
 # NUnit
 *.VisualState.xml
 TestResult.xml
+
+# IDE - Visual Studio
+.vs/
+.vscode/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# IDE - JetBrains Rider
+.idea/
+*.sln.iml
+
+# OS Files
+.DS_Store
+Thumbs.db
+
+# Environment variables and secrets
+.env
+.env.local
+appsettings.Development.json
+appsettings.*.json
+!appsettings.json
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# Logs
+*.log
+
+# Deployment
+wwwroot/
 nunit-*.xml
