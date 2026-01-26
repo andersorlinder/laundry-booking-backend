@@ -18,7 +18,7 @@ public class LaundryDbContext : DbContext
 
         // User configuration
         modelBuilder.Entity<User>()
-            .HasIndex(u => u.Email)
+            .HasIndex(u => u.ApartmentNumber)
             .IsUnique();
 
         modelBuilder.Entity<User>()

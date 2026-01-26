@@ -51,11 +51,25 @@ API is now available at: **https://localhost:5001**
 ```bash
 curl -X POST https://localhost:5001/api/auth/register \
   -H "Content-Type: application/json" \
-  -d '{"email":"user@example.com","pin":"1234","apartmentNumber":"A10231"}' \
+  -d '{"forename":"John Smith","pin":"1234","apartmentNumber":"ABC123"}' \
   --insecure
 ```
 
-Response includes `userId`, `email`, `apartmentNumber`, and `token`. Save the `token` for authenticated requests.
+**Note**:
+- Forename can contain whitespaces (e.g., "John Smith")
+- Apartment number must be exactly 6 uppercase alphanumeric characters (A-Z, 0-9).
+
+Response includes `userId`, `forename`, `apartmentNumber`, and `token`. Save the `token` for authenticated requests.
+
+### Login:
+```bash
+curl -X POST https://localhost:5001/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"apartmentNumber":"ABC123","pin":"1234"}' \
+  --insecure
+```
+
+**Note**: Login uses apartment number (case-insensitive) instead of email.
 
 ### Book a slot:
 ```bash

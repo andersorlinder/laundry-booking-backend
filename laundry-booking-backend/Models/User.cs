@@ -3,7 +3,7 @@ namespace laundry_booking_backend.Models;
 public class User
 {
     public int Id { get; set; }
-    public string Email { get; set; } = null!;
+    public string Forename { get; set; } = null!;
     public string PasswordPin { get; set; } = null!; // Stored as hashed value
     public string ApartmentNumber { get; set; } = null!; // Exactly 6 characters
     public DateTime CreatedAt { get; set; }

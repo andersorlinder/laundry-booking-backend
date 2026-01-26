@@ -1,17 +1,17 @@
 # Laundry Booking API
 
-A REST API for managing laundry time slot bookings with user authentication. Users can register with email, apartment number, and a 4-digit PIN, then book and unbook laundry time slots. The system supports 3 time slots per day.
+A REST API for managing laundry time slot bookings with user authentication. Users can register with forename (name), apartment number, and a 4-digit PIN, then book and unbook laundry time slots. The system supports 3 time slots per day.
 
 ## Features
 
-- **User Authentication**: Register and login with email, apartment number, and 4-digit PIN
+- **User Authentication**: Register with forename (supports whitespaces) and 6-character uppercase apartment number, login using apartment number and 4-digit PIN
 - **JWT Token-based Authorization**: Secure API endpoints with JWT tokens
-- **Apartment Tracking**: Each user and booking is associated with a 6-character apartment number
+- **Apartment Tracking**: Each user and booking is associated with a 6-character uppercase alphanumeric apartment number
 - **Time Slot Management**: 3 time slots per day (slot 1, 2, 3)
 - **Booking System**: Users can book and unbook laundry slots
 - **Booking Visibility**: View booked slots with apartment numbers for any date range
 - **PostgreSQL Database**: Persistent data storage
-- **Input Validation**: Email, PIN, and apartment number format validation
+- **Input Validation**: Forename (allows whitespaces), PIN (4 digits), and apartment number (6 uppercase alphanumeric) format validation
 
 ## Prerequisites
 
@@ -67,7 +67,7 @@ The API will be available at `https://localhost:5001`
 - **Request Body**:
   ```json
   {
-    "email": "user@example.com",
+    "forename": "John Smith",
     "pin": "1234",
     "apartmentNumber": "A10231"
   }
@@ -76,15 +76,15 @@ The API will be available at `https://localhost:5001`
   ```json
   {
     "userId": 1,
-    "email": "user@example.com",
+    "forename": "John Smith",
     "apartmentNumber": "A10231",
     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
   }
   ```
 - **Validation**:
-  - Email must be valid format
+  - Forename is required (can contain whitespaces, will be trimmed)
   - PIN must be exactly 4 digits
-  - Apartment number must be exactly 6 characters
+  - Apartment number must be exactly 6 uppercase alphanumeric characters (letters A-Z and digits 0-9)
 
 #### Login User
 - **Endpoint**: `POST /api/auth/login`
@@ -92,15 +92,16 @@ The API will be available at `https://localhost:5001`
 - **Request Body**:
   ```json
   {
-    "email": "user@example.com",
+    "apartmentNumber": "A10231",
     "pin": "1234"
   }
   ```
+- **Note**: Apartment number is case-insensitive for login (automatically converted to uppercase)
 - **Response** (200):
   ```json
   {
     "userId": 1,
-    "email": "user@example.com",
+    "forename": "John Smith",
     "apartmentNumber": "A10231",
     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
   }
@@ -191,7 +192,7 @@ The API will be available at `https://localhost:5001`
 curl -X POST https://localhost:5001/api/auth/register \
   -H "Content-Type: application/json" \
   -d '{
-    "email": "john@example.com",
+    "forename": "John Smith",
     "pin": "1234",
     "apartmentNumber": "A10231"
   }'
@@ -202,7 +203,7 @@ curl -X POST https://localhost:5001/api/auth/register \
 curl -X POST https://localhost:5001/api/auth/login \
   -H "Content-Type: application/json" \
   -d '{
-    "email": "john@example.com",
+    "apartmentNumber": "A10231",
     "pin": "1234"
   }'
 ```
@@ -245,9 +246,9 @@ Error responses include a message explaining the issue:
 
 ### Users Table
 - `Id` (INT, Primary Key)
-- `Email` (TEXT, Unique)
+- `Forename` (TEXT, User's name - supports whitespaces)
 - `PasswordPin` (TEXT, Hashed)
-- `ApartmentNumber` (TEXT, Exactly 6 characters)
+- `ApartmentNumber` (TEXT, Exactly 6 uppercase alphanumeric characters, UNIQUE)
 - `CreatedAt` (TIMESTAMP)
 - `UpdatedAt` (TIMESTAMP)
 

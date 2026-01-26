@@ -152,7 +152,7 @@ curl -X POST https://localhost:5001/api/auth/register \
 curl -X POST https://localhost:5001/api/auth/register \
   -H "Content-Type: application/json" \
   -d '{
-    "email": "user@example.com",
+    "forename": "John Smith",
     "pin": "1234",
     "apartmentNumber": "A10231"
   }' \
@@ -163,7 +163,7 @@ curl -X POST https://localhost:5001/api/auth/register \
 ```json
 {
   "userId": 1,
-  "email": "user@example.com",
+  "forename": "John Smith",
   "apartmentNumber": "A10231",
   "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
 }
@@ -174,17 +174,19 @@ curl -X POST https://localhost:5001/api/auth/register \
 curl -X POST https://localhost:5001/api/auth/login \
   -H "Content-Type: application/json" \
   -d '{
-    "email": "user@example.com",
+    "apartmentNumber": "A10231",
     "pin": "1234"
   }' \
   --insecure
 ```
 
+**Note**: Login uses apartment number instead of email. Apartment number is case-insensitive (automatically converted to uppercase).
+
 **Expected Response** (200):
 ```json
 {
   "userId": 1,
-  "email": "user@example.com",
+  "forename": "John Smith",
   "apartmentNumber": "A10231",
   "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
 }
@@ -254,8 +256,8 @@ curl -X DELETE https://localhost:5001/api/bookings/unbook/1 \
 
 1. Import the API endpoints using the URL: `https://localhost:5001/swagger/v1/swagger.json`
 2. Or manually create requests:
-   - **Register**: POST to `https://localhost:5001/api/auth/register`
-   - **Login**: POST to `https://localhost:5001/api/auth/login`
+   - **Register**: POST to `https://localhost:5001/api/auth/register` (requires forename, pin, apartmentNumber)
+   - **Login**: POST to `https://localhost:5001/api/auth/login` (requires apartmentNumber and pin)
    - **Book**: POST to `https://localhost:5001/api/bookings/book` (add Bearer token)
    - **Get Bookings**: GET to `https://localhost:5001/api/bookings/my-bookings` (add Bearer token)
    - **Booked**: GET to `https://localhost:5001/api/bookings/booked?date={date}&daysAhead={days}`

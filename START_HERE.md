@@ -10,7 +10,7 @@ Your complete REST API for a laundry booking system has been successfully create
 
 ### ✅ Complete API Application
 - Full-featured REST API written in C# (.NET Core 10)
-- User authentication with email and 4-digit PIN
+- User authentication with apartment number and 4-digit PIN
 - PostgreSQL database with Entity Framework Core
 - JWT-based authorization
 - 3 daily time slots with booking/unbooking system
@@ -77,8 +77,8 @@ For complete Docker setup with PostgreSQL:
 
 ### Authentication (Public)
 ```
-POST /api/auth/register          Register with email + 4-digit PIN
-POST /api/auth/login             Login and get JWT token
+POST /api/auth/register          Register with forename + apartment number + 4-digit PIN
+POST /api/auth/login             Login with apartment number + PIN and get JWT token
 ```
 
 ### Bookings (Protected with JWT)
@@ -160,7 +160,7 @@ GET /api/bookings/booked         View booked slots for date range (public)
 ✅ **Prevent Double-Booking** - Database constraint on (Date, Slot)
 ✅ **Flexible Cancellation** - Users can unbook slots anytime
 ✅ **Availability Checking** - Public endpoint to see available slots
-✅ **Secure Authentication** - Email + PIN with hashing
+✅ **Secure Authentication** - Apartment number + PIN with hashing
 ✅ **JWT Authorization** - Protected endpoints require tokens
 ✅ **Automatic Migrations** - Database setup on first run
 
@@ -186,7 +186,13 @@ API will be available at: **https://localhost:5001**
 # Register
 curl -X POST https://localhost:5001/api/auth/register \
   -H "Content-Type: application/json" \
-  -d '{"email":"user@example.com","pin":"1234"}' \
+  -d '{"forename":"John Smith","pin":"1234","apartmentNumber":"ABC123"}' \
+  --insecure
+
+# Login (using apartment number)
+curl -X POST https://localhost:5001/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"apartmentNumber":"ABC123","pin":"1234"}' \
   --insecure
 
 # The response includes a token - copy it

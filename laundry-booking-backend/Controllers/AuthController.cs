@@ -28,11 +28,16 @@ public class AuthController : ControllerBase
             return BadRequest(new { message = "PIN must be exactly 4 digits" });
         }
 
+        if (!_authService.ValidateApartmentNumber(request.ApartmentNumber))
+        {
+            return BadRequest(new { message = "Apartment number must be exactly 6 uppercase alphanumeric characters" });
+        }
+
         var result = await _authService.RegisterAsync(request);
 
         if (result == null)
         {
-            return BadRequest(new { message = "Registration failed. Email might already exist." });
+            return BadRequest(new { message = "Registration failed. Apartment number might already be registered." });
         }
 
         return CreatedAtAction(nameof(Register), result);
@@ -50,7 +55,7 @@ public class AuthController : ControllerBase
 
         if (result == null)
         {
-            return Unauthorized(new { message = "Invalid email or PIN" });
+            return Unauthorized(new { message = "Invalid apartment number or PIN" });
         }
 
         return Ok(result);

@@ -43,18 +43,18 @@ public class AuthService : IAuthService
             return null; // Invalid apartment number format
         }
 
-        // Check if email already exists
+        // Check if apartment number already exists
         var existingUser = await _context.Users
-            .FirstOrDefaultAsync(u => u.Email == request.Email);
+            .FirstOrDefaultAsync(u => u.ApartmentNumber == request.ApartmentNumber);
 
         if (existingUser != null)
         {
-            return null; // User already exists
+            return null; // Apartment number already registered
         }
 
         var user = new User
         {
-            Email = request.Email,
+            Forename = request.Forename.Trim(),
             PasswordPin = HashPin(request.Pin),
             ApartmentNumber = request.ApartmentNumber,
             CreatedAt = DateTime.UtcNow,
@@ -67,7 +67,7 @@ public class AuthService : IAuthService
         return new LoginResponse
         {
             UserId = user.Id,
-            Email = user.Email,
+            Forename = user.Forename,
             ApartmentNumber = user.ApartmentNumber,
             Token = GenerateToken(user)
         };
@@ -75,8 +75,11 @@ public class AuthService : IAuthService
 
     public async Task<LoginResponse?> LoginAsync(LoginRequest request)
     {
+        // Normalize apartment number to uppercase for case-insensitive comparison
+        var normalizedApartmentNumber = request.ApartmentNumber.ToUpper();
+
         var user = await _context.Users
-            .FirstOrDefaultAsync(u => u.Email == request.Email);
+            .FirstOrDefaultAsync(u => u.ApartmentNumber == normalizedApartmentNumber);
 
         if (user == null)
         {
@@ -91,7 +94,7 @@ public class AuthService : IAuthService
         return new LoginResponse
         {
             UserId = user.Id,
-            Email = user.Email,
+            Forename = user.Forename,
             ApartmentNumber = user.ApartmentNumber,
             Token = GenerateToken(user)
         };
@@ -114,7 +117,7 @@ public class AuthService : IAuthService
         var claims = new[]
         {
             new System.Security.Claims.Claim(System.Security.Claims.ClaimTypes.NameIdentifier, user.Id.ToString()),
-            new System.Security.Claims.Claim(System.Security.Claims.ClaimTypes.Email, user.Email)
+            new System.Security.Claims.Claim(System.Security.Claims.ClaimTypes.Name, user.Forename)
         };
 
         var token = new JwtSecurityToken(
@@ -136,8 +139,10 @@ public class AuthService : IAuthService
 
     public bool ValidateApartmentNumber(string apartmentNumber)
     {
-        // Apartment number must be exactly 6 characters
-        return !string.IsNullOrWhiteSpace(apartmentNumber) && apartmentNumber.Length == 6;
+        // Apartment number must be exactly 6 uppercase alphanumeric characters
+        return !string.IsNullOrWhiteSpace(apartmentNumber) &&
+               apartmentNumber.Length == 6 &&
+               apartmentNumber.All(c => char.IsUpper(c) || char.IsDigit(c));
     }
 
     private string HashPin(string pin)
