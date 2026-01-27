@@ -95,6 +95,14 @@ public class BookingService : IBookingService
             return false; // Booking not found or doesn't belong to user
         }
 
+        // Prevent unbooking past dates
+        var bookingDateOnly = DateOnly.FromDateTime(booking.BookingDate);
+        var todayOnly = DateOnly.FromDateTime(DateTime.UtcNow);
+        if (bookingDateOnly < todayOnly)
+        {
+            return false; // Cannot unbook past dates
+        }
+
         _context.BookedTimeSlots.Remove(booking);
         await _context.SaveChangesAsync();
 
