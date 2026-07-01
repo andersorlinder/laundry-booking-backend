@@ -1,0 +1,7 @@
+version: 2
+updates:
+  - package-ecosystem: "nuget"
+    directory: "/laundry-booking-backend"
+    schedule:
+      interval: "quarterly"
+    rebase-strategy: "disabled"
